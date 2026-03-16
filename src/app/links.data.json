@@ -7,7 +7,7 @@
     "service": "Madrejoy",
     "icon": "store",
     "link": "https://madrejoy.toranos.com.br?catalogo=1275",
-    "color": "#E879A0"
+    "color": "#FF9DBF"
   },
   {
     "id": "instagram",
@@ -17,7 +17,7 @@
     "service": "Instagram",
     "icon": "instagram",
     "link": "https://www.instagram.com/gesseleoliveira.madrejoy/",
-    "color": "#E1306C"
+    "color": "#FF6B9D"
   },
   {
     "id": "whatsapp",
@@ -27,6 +27,6 @@
     "service": "WhatsApp",
     "icon": "whatsapp",
     "link": "https://wa.me/5551985916412",
-    "color": "#25D366"
+    "color": "#5BFFA0"
   }
 ]
