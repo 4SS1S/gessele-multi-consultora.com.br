@@ -1,0 +1,32 @@
+[
+  {
+    "id": "catalogo",
+    "type": "store",
+    "title": "Catálogo Madrejoy",
+    "description": "Acesse nosso catálogo completo de produtos",
+    "service": "Madrejoy",
+    "icon": "store",
+    "link": "https://madrejoy.toranos.com.br?catalogo=1275",
+    "color": "#E879A0"
+  },
+  {
+    "id": "instagram",
+    "type": "social",
+    "title": "Instagram",
+    "description": "@gesseleoliveira.madrejoy",
+    "service": "Instagram",
+    "icon": "instagram",
+    "link": "https://www.instagram.com/gesseleoliveira.madrejoy/",
+    "color": "#E1306C"
+  },
+  {
+    "id": "whatsapp",
+    "type": "contact",
+    "title": "WhatsApp",
+    "description": "Fale conosco pelo WhatsApp",
+    "service": "WhatsApp",
+    "icon": "whatsapp",
+    "link": "https://wa.me/55519...",
+    "color": "#25D366"
+  }
+]
