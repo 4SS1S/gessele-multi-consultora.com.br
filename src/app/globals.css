@@ -42,13 +42,13 @@ body {
   height: 200%;
   background: linear-gradient(
     135deg,
-    #1a0533 0%,
-    #2d1052 20%,
-    #1e1b6e 40%,
-    #162050 55%,
-    #0f2847 70%,
-    #1a0a3e 85%,
-    #2d1052 100%
+    #2D1052 0%,
+    #7B2D8E 20%,
+    #A833B9 40%,
+    #D9369D 55%,
+    #E84590 70%,
+    #A833B9 85%,
+    #4A1A6B 100%
   );
   background-size: 400% 400%;
   animation: gradient-shift 16s ease-in-out infinite;
