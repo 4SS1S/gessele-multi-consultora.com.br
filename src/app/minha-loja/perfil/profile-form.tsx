@@ -1,110 +1,118 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import { useActionState, useRef, useState } from 'react'
-import { useFormStatus } from 'react-dom'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { formatCPF, validateCPF } from '@/lib/cpf'
-import { updateProfile } from './actions'
+import Image from "next/image";
+import { useActionState, useRef, useState } from "react";
+import { useFormStatus } from "react-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { formatCPF, validateCPF } from "@/lib/cpf";
+import { updateProfile } from "./actions";
 
 const ROLE_LABEL = {
-  administrador: 'Administrador',
-  consultora: 'Consultora',
-  comprador: 'Comprador',
-} as const
+  administrador: "Administrador",
+  consultora: "Consultora",
+  comprador: "Comprador",
+} as const;
 
 const ROLE_COLOR = {
-  administrador: 'bg-amber-500/15 text-amber-400 border-amber-500/20',
-  consultora: 'bg-violet-500/15 text-violet-400 border-violet-500/20',
-  comprador: 'bg-sky-500/15 text-sky-400 border-sky-500/20',
-} as const
+  administrador: "bg-amber-500/15 text-amber-400 border-amber-500/20",
+  consultora: "bg-violet-500/15 text-violet-400 border-violet-500/20",
+  comprador: "bg-sky-500/15 text-sky-400 border-sky-500/20",
+} as const;
 
-type Role = keyof typeof ROLE_LABEL
+type Role = keyof typeof ROLE_LABEL;
 
 interface Profile {
-  fullName: string
-  email: string
-  phone: string | null
-  cpf: string | null
-  avatarUrl: string | null
-  role: string
-  createdAt: Date
+  fullName: string;
+  email: string;
+  phone: string | null;
+  cpf: string | null;
+  avatarUrl: string | null;
+  role: string;
+  createdAt: Date;
 }
 
 function SaveButton() {
-  const { pending } = useFormStatus()
+  const { pending } = useFormStatus();
   return (
     <Button
       type="submit"
       disabled={pending}
       className="bg-violet-600 text-white hover:bg-violet-500 disabled:opacity-60"
     >
-      {pending ? 'Salvando...' : 'Salvar alterações'}
+      {pending ? "Salvando..." : "Salvar alterações"}
     </Button>
-  )
+  );
 }
 
 export function ProfileForm({ profile }: { profile: Profile }) {
-  const [state, action] = useActionState(updateProfile, null)
+  const [state, action] = useActionState(updateProfile, null);
 
-  const [cpfValue, setCpfValue] = useState(profile.cpf ?? '')
-  const [cpfError, setCpfError] = useState('')
-  const [cpfChecking, setCpfChecking] = useState(false)
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
-  const avatarRef = useRef<HTMLInputElement>(null)
+  const [cpfValue, setCpfValue] = useState(profile.cpf ?? "");
+  const [cpfError, setCpfError] = useState("");
+  const [cpfChecking, setCpfChecking] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const avatarRef = useRef<HTMLInputElement>(null);
 
-  const initials = (profile.fullName || 'U').charAt(0).toUpperCase()
-  const role = profile.role as Role
+  const initials = (profile.fullName || "U").charAt(0).toUpperCase();
+  const role = profile.role as Role;
 
   function handleCpfChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const formatted = formatCPF(e.target.value)
-    setCpfValue(formatted)
+    const formatted = formatCPF(e.target.value);
+    setCpfValue(formatted);
     if (formatted.length < 14) {
-      setCpfError('')
-      setCpfChecking(false)
+      setCpfError("");
+      setCpfChecking(false);
     }
   }
 
   async function handleCpfBlur() {
     if (cpfValue.length === 14) {
       if (!validateCPF(cpfValue)) {
-        setCpfError('CPF inválido.')
-        return
+        setCpfError("CPF inválido.");
+        return;
       }
-      setCpfChecking(true)
-      setCpfError('')
+      setCpfChecking(true);
+      setCpfError("");
       try {
-        const res = await fetch(`/api/cpf/check?cpf=${encodeURIComponent(cpfValue)}`)
-        const data = await res.json()
+        const res = await fetch(
+          `/api/cpf/check?cpf=${encodeURIComponent(cpfValue)}`,
+        );
+        const data = await res.json();
         // If it's the user's own CPF, the server action handles the "same owner" check
         // The API just checks existence — we ignore "already registered" here and let
         // the server action decide (it skips the current user)
-        if (!data.valid) setCpfError(data.message ?? 'CPF inválido.')
+        if (!data.valid) setCpfError(data.message ?? "CPF inválido.");
       } catch {
         // ignore
       } finally {
-        setCpfChecking(false)
+        setCpfChecking(false);
       }
     }
   }
 
   function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (file) setAvatarPreview(URL.createObjectURL(file))
+    const file = e.target.files?.[0];
+    if (file) setAvatarPreview(URL.createObjectURL(file));
   }
 
-  const memberSince = new Intl.DateTimeFormat('pt-BR', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  }).format(new Date(profile.createdAt))
+  const memberSince = new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  }).format(new Date(profile.createdAt));
 
   return (
     <Tabs defaultValue="dados" className="space-y-4">
@@ -158,7 +166,9 @@ export function ProfileForm({ profile }: { profile: Profile }) {
                       </AvatarFallback>
                     </Avatar>
                     <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 transition group-hover:opacity-100">
-                      <span className="text-[10px] text-white font-medium">Alterar</span>
+                      <span className="text-[10px] text-white font-medium">
+                        Alterar
+                      </span>
                     </div>
                   </button>
                   <input
@@ -172,11 +182,13 @@ export function ProfileForm({ profile }: { profile: Profile }) {
                 </div>
 
                 <div className="space-y-1">
-                  <p className="font-semibold text-white">{profile.fullName || 'Sem nome'}</p>
+                  <p className="font-semibold text-white">
+                    {profile.fullName || "Sem nome"}
+                  </p>
                   <p className="text-sm text-white/50">{profile.email}</p>
                   <Badge
                     variant="outline"
-                    className={`text-[10px] font-medium px-2 py-0.5 ${ROLE_COLOR[role] ?? ''}`}
+                    className={`text-[10px] font-medium px-2 py-0.5 ${ROLE_COLOR[role] ?? ""}`}
                   >
                     {ROLE_LABEL[role] ?? profile.role}
                   </Badge>
@@ -199,7 +211,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
                   placeholder="Seu nome completo"
                   className="border-white/10 bg-white/5 text-white placeholder-white/20 focus-visible:ring-violet-500"
                 />
-                {state?.field === 'full_name' && (
+                {state?.field === "full_name" && (
                   <p className="text-[11px] text-red-400">{state.error}</p>
                 )}
               </div>
@@ -212,7 +224,9 @@ export function ProfileForm({ profile }: { profile: Profile }) {
                   readOnly
                   className="border-white/10 bg-white/5 text-white/40 cursor-default select-none"
                 />
-                <p className="text-[11px] text-white/25">O e-mail não pode ser alterado.</p>
+                <p className="text-[11px] text-white/25">
+                  O e-mail não pode ser alterado.
+                </p>
               </div>
 
               {/* Telefone */}
@@ -223,7 +237,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
                 <Input
                   id="phone"
                   name="phone"
-                  defaultValue={profile.phone ?? ''}
+                  defaultValue={profile.phone ?? ""}
                   type="tel"
                   autoComplete="tel"
                   placeholder="(00) 00000-0000"
@@ -248,18 +262,20 @@ export function ProfileForm({ profile }: { profile: Profile }) {
                   onBlur={handleCpfBlur}
                   maxLength={14}
                   className={`border-white/10 bg-white/5 text-white placeholder-white/20 focus-visible:ring-violet-500 ${
-                    cpfError || state?.field === 'cpf'
-                      ? 'border-red-500/50 bg-red-500/5 focus-visible:ring-red-500'
-                      : ''
+                    cpfError || state?.field === "cpf"
+                      ? "border-red-500/50 bg-red-500/5 focus-visible:ring-red-500"
+                      : ""
                   }`}
                 />
                 {cpfChecking && (
-                  <p className="text-[11px] text-white/40">Verificando CPF...</p>
+                  <p className="text-[11px] text-white/40">
+                    Verificando CPF...
+                  </p>
                 )}
                 {!cpfChecking && cpfError && (
                   <p className="text-[11px] text-red-400">{cpfError}</p>
                 )}
-                {!cpfChecking && !cpfError && state?.field === 'cpf' && (
+                {!cpfChecking && !cpfError && state?.field === "cpf" && (
                   <p className="text-[11px] text-red-400">{state.error}</p>
                 )}
               </div>
@@ -306,13 +322,16 @@ export function ProfileForm({ profile }: { profile: Profile }) {
                   minLength={6}
                   className="border-white/10 bg-white/5 text-white placeholder-white/20 focus-visible:ring-violet-500"
                 />
-                {state?.field === 'new_password' && (
+                {state?.field === "new_password" && (
                   <p className="text-[11px] text-red-400">{state.error}</p>
                 )}
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="confirm_password" className="text-xs text-white/70">
+                <Label
+                  htmlFor="confirm_password"
+                  className="text-xs text-white/70"
+                >
                   Confirmar nova senha
                 </Label>
                 <Input
@@ -323,7 +342,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
                   placeholder="Repita a nova senha"
                   className="border-white/10 bg-white/5 text-white placeholder-white/20 focus-visible:ring-violet-500"
                 />
-                {state?.field === 'confirm_password' && (
+                {state?.field === "confirm_password" && (
                   <p className="text-[11px] text-red-400">{state.error}</p>
                 )}
               </div>
@@ -349,5 +368,5 @@ export function ProfileForm({ profile }: { profile: Profile }) {
         </TabsContent>
       </form>
     </Tabs>
-  )
+  );
 }

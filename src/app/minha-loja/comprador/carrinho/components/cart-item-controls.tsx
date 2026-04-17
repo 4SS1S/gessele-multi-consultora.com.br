@@ -1,23 +1,29 @@
-'use client'
+"use client";
 
-import { useTransition } from 'react'
-import { removeCartItem, updateCartItem } from '../actions'
+import { useTransition } from "react";
+import { removeCartItem, updateCartItem } from "../actions";
 
 interface CartItemControlsProps {
-  itemId: string
-  quantity: number
-  maxQuantity: number
+  itemId: string;
+  quantity: number;
+  maxQuantity: number;
 }
 
-export function CartItemControls({ itemId, quantity, maxQuantity }: CartItemControlsProps) {
-  const [isPending, startTransition] = useTransition()
+export function CartItemControls({
+  itemId,
+  quantity,
+  maxQuantity,
+}: CartItemControlsProps) {
+  const [isPending, startTransition] = useTransition();
 
   return (
     <div className="flex items-center gap-1">
       <button
         type="button"
         disabled={isPending || quantity <= 1}
-        onClick={() => startTransition(() => updateCartItem(itemId, quantity - 1))}
+        onClick={() =>
+          startTransition(() => updateCartItem(itemId, quantity - 1))
+        }
         className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/10 text-sm text-white/60 transition hover:border-white/25 hover:text-white disabled:opacity-30"
       >
         −
@@ -26,7 +32,9 @@ export function CartItemControls({ itemId, quantity, maxQuantity }: CartItemCont
       <button
         type="button"
         disabled={isPending || quantity >= maxQuantity}
-        onClick={() => startTransition(() => updateCartItem(itemId, quantity + 1))}
+        onClick={() =>
+          startTransition(() => updateCartItem(itemId, quantity + 1))
+        }
         className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/10 text-sm text-white/60 transition hover:border-white/25 hover:text-white disabled:opacity-30"
       >
         +
@@ -41,5 +49,5 @@ export function CartItemControls({ itemId, quantity, maxQuantity }: CartItemCont
         ✕
       </button>
     </div>
-  )
+  );
 }

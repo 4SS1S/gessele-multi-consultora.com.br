@@ -1,23 +1,26 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { createClient } from '@/lib/client'
+import { useState } from "react";
+import { createClient } from "@/lib/client";
 
-type Provider = 'google' | 'facebook'
+type Provider = "google" | "facebook";
 
 interface SocialButtonsProps {
   /** 'comprador' define o role no user_metadata para o trigger capturar */
-  role?: 'comprador'
-  label?: string
+  role?: "comprador";
+  label?: string;
 }
 
-export function SocialButtons({ role = 'comprador', label = 'Continuar' }: SocialButtonsProps) {
-  const [loading, setLoading] = useState<Provider | null>(null)
+export function SocialButtons({
+  role = "comprador",
+  label = "Continuar",
+}: SocialButtonsProps) {
+  const [loading, setLoading] = useState<Provider | null>(null);
 
   async function signIn(provider: Provider) {
-    setLoading(provider)
-    const supabase = createClient()
-    const origin = window.location.origin
+    setLoading(provider);
+    const supabase = createClient();
+    const origin = window.location.origin;
 
     await supabase.auth.signInWithOAuth({
       provider,
@@ -25,10 +28,13 @@ export function SocialButtons({ role = 'comprador', label = 'Continuar' }: Socia
         redirectTo: `${origin}/auth/callback`,
         // O user_metadata.role é capturado pelo trigger handle_new_user()
         // e define o perfil como comprador por padrão
-        queryParams: provider === 'google' ? { access_type: 'offline', prompt: 'select_account' } : {},
-        scopes: provider === 'facebook' ? 'email,public_profile' : undefined,
+        queryParams:
+          provider === "google"
+            ? { access_type: "offline", prompt: "select_account" }
+            : {},
+        scopes: provider === "facebook" ? "email,public_profile" : undefined,
       },
-    })
+    });
     // A página redireciona — o loading vai naturalmente
   }
 
@@ -38,10 +44,10 @@ export function SocialButtons({ role = 'comprador', label = 'Continuar' }: Socia
       <button
         type="button"
         disabled={loading !== null}
-        onClick={() => signIn('google')}
+        onClick={() => signIn("google")}
         className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-medium text-white transition hover:bg-white/10 disabled:opacity-60"
       >
-        {loading === 'google' ? (
+        {loading === "google" ? (
           <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
         ) : (
           <GoogleIcon />
@@ -53,10 +59,10 @@ export function SocialButtons({ role = 'comprador', label = 'Continuar' }: Socia
       <button
         type="button"
         disabled={loading !== null}
-        onClick={() => signIn('facebook')}
+        onClick={() => signIn("facebook")}
         className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/10 bg-[#1877F2]/10 px-4 py-3 text-sm font-medium text-white transition hover:bg-[#1877F2]/20 disabled:opacity-60"
       >
-        {loading === 'facebook' ? (
+        {loading === "facebook" ? (
           <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
         ) : (
           <FacebookIcon />
@@ -64,7 +70,7 @@ export function SocialButtons({ role = 'comprador', label = 'Continuar' }: Socia
         {label} com Facebook
       </button>
     </div>
-  )
+  );
 }
 
 function GoogleIcon() {
@@ -87,13 +93,19 @@ function GoogleIcon() {
         d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
       />
     </svg>
-  )
+  );
 }
 
 function FacebookIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2" aria-hidden="true">
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="#1877F2"
+      aria-hidden="true"
+    >
       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
     </svg>
-  )
+  );
 }

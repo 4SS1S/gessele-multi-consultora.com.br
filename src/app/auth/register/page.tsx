@@ -1,70 +1,78 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import Link from 'next/link'
-import { useActionState, useRef, useState } from 'react'
-import { useFormStatus } from 'react-dom'
-import { formatCPF, validateCPF } from '@/lib/cpf'
-import { register } from '../actions'
-import { SocialButtons } from '../components/social-buttons'
+import Image from "next/image";
+import Link from "next/link";
+import { useActionState, useRef, useState } from "react";
+import { useFormStatus } from "react-dom";
+import { formatCPF, validateCPF } from "@/lib/cpf";
+import { register } from "../actions";
+import { SocialButtons } from "../components/social-buttons";
 
-function SubmitButton({ cpfChecking, cpfError }: { cpfChecking: boolean; cpfError: string }) {
-  const { pending } = useFormStatus()
+function SubmitButton({
+  cpfChecking,
+  cpfError,
+}: {
+  cpfChecking: boolean;
+  cpfError: string;
+}) {
+  const { pending } = useFormStatus();
   return (
     <button
       type="submit"
       disabled={pending || cpfChecking || !!cpfError}
       className="w-full rounded-xl bg-violet-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-violet-500 disabled:opacity-60"
     >
-      {pending ? 'Criando conta...' : 'Criar conta'}
+      {pending ? "Criando conta..." : "Criar conta"}
     </button>
-  )
+  );
 }
 
 export default function RegisterPage() {
-  const [state, action] = useActionState(register, null)
-  const [cpfValue, setCpfValue] = useState('')
-  const [cpfError, setCpfError] = useState('')
-  const [cpfChecking, setCpfChecking] = useState(false)
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
-  const avatarRef = useRef<HTMLInputElement>(null)
+  const [state, action] = useActionState(register, null);
+  const [cpfValue, setCpfValue] = useState("");
+  const [cpfError, setCpfError] = useState("");
+  const [cpfChecking, setCpfChecking] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const avatarRef = useRef<HTMLInputElement>(null);
 
   async function checkCpf(formatted: string) {
     if (!validateCPF(formatted)) {
-      setCpfError('CPF inválido.')
-      return
+      setCpfError("CPF inválido.");
+      return;
     }
-    setCpfChecking(true)
-    setCpfError('')
+    setCpfChecking(true);
+    setCpfError("");
     try {
-      const res = await fetch(`/api/cpf/check?cpf=${encodeURIComponent(formatted)}`)
-      const data = await res.json()
-      setCpfError(data.message ?? '')
+      const res = await fetch(
+        `/api/cpf/check?cpf=${encodeURIComponent(formatted)}`,
+      );
+      const data = await res.json();
+      setCpfError(data.message ?? "");
     } catch {
       // silently ignore network errors — server action will validate on submit
     } finally {
-      setCpfChecking(false)
+      setCpfChecking(false);
     }
   }
 
   function handleCpfChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const formatted = formatCPF(e.target.value)
-    setCpfValue(formatted)
+    const formatted = formatCPF(e.target.value);
+    setCpfValue(formatted);
     if (formatted.length < 14) {
-      setCpfError('')
-      setCpfChecking(false)
+      setCpfError("");
+      setCpfChecking(false);
     }
   }
 
   async function handleCpfBlur() {
     if (cpfValue.length === 14) {
-      await checkCpf(cpfValue)
+      await checkCpf(cpfValue);
     }
   }
 
   function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (file) setAvatarPreview(URL.createObjectURL(file))
+    const file = e.target.files?.[0];
+    if (file) setAvatarPreview(URL.createObjectURL(file));
   }
 
   return (
@@ -131,7 +139,10 @@ export default function RegisterPage() {
 
             {/* Nome */}
             <div className="space-y-1.5">
-              <label htmlFor="full_name" className="block text-xs font-medium text-white/70">
+              <label
+                htmlFor="full_name"
+                className="block text-xs font-medium text-white/70"
+              >
                 Nome completo <span className="text-red-400">*</span>
               </label>
               <input
@@ -147,7 +158,10 @@ export default function RegisterPage() {
 
             {/* E-mail */}
             <div className="space-y-1.5">
-              <label htmlFor="email" className="block text-xs font-medium text-white/70">
+              <label
+                htmlFor="email"
+                className="block text-xs font-medium text-white/70"
+              >
                 E-mail <span className="text-red-400">*</span>
               </label>
               <input
@@ -163,7 +177,10 @@ export default function RegisterPage() {
 
             {/* CPF */}
             <div className="space-y-1.5">
-              <label htmlFor="cpf" className="block text-xs font-medium text-white/70">
+              <label
+                htmlFor="cpf"
+                className="block text-xs font-medium text-white/70"
+              >
                 CPF
               </label>
               <input
@@ -179,8 +196,8 @@ export default function RegisterPage() {
                 maxLength={14}
                 className={`w-full rounded-xl border px-4 py-3 text-sm text-white placeholder-white/20 outline-none transition focus:ring-1 ${
                   cpfError
-                    ? 'border-red-500/50 bg-red-500/5 focus:border-red-500 focus:ring-red-500'
-                    : 'border-white/10 bg-white/5 focus:border-violet-500 focus:ring-violet-500'
+                    ? "border-red-500/50 bg-red-500/5 focus:border-red-500 focus:ring-red-500"
+                    : "border-white/10 bg-white/5 focus:border-violet-500 focus:ring-violet-500"
                 }`}
               />
               {cpfChecking && (
@@ -193,7 +210,10 @@ export default function RegisterPage() {
 
             {/* Telefone */}
             <div className="space-y-1.5">
-              <label htmlFor="phone" className="block text-xs font-medium text-white/70">
+              <label
+                htmlFor="phone"
+                className="block text-xs font-medium text-white/70"
+              >
                 Telefone
               </label>
               <input
@@ -208,7 +228,10 @@ export default function RegisterPage() {
 
             {/* Senha */}
             <div className="space-y-1.5">
-              <label htmlFor="password" className="block text-xs font-medium text-white/70">
+              <label
+                htmlFor="password"
+                className="block text-xs font-medium text-white/70"
+              >
                 Senha <span className="text-red-400">*</span>
               </label>
               <input
@@ -225,7 +248,10 @@ export default function RegisterPage() {
 
             {/* Confirmar senha */}
             <div className="space-y-1.5">
-              <label htmlFor="confirm_password" className="block text-xs font-medium text-white/70">
+              <label
+                htmlFor="confirm_password"
+                className="block text-xs font-medium text-white/70"
+              >
                 Confirmar senha <span className="text-red-400">*</span>
               </label>
               <input
@@ -250,8 +276,11 @@ export default function RegisterPage() {
           </form>
 
           <p className="text-center text-xs text-white/40">
-            Já tem conta?{' '}
-            <Link href="/auth/login" className="text-violet-400 transition hover:text-violet-300">
+            Já tem conta?{" "}
+            <Link
+              href="/auth/login"
+              className="text-violet-400 transition hover:text-violet-300"
+            >
               Entrar
             </Link>
           </p>
@@ -264,5 +293,5 @@ export default function RegisterPage() {
         </p>
       </div>
     </div>
-  )
+  );
 }

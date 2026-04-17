@@ -4,10 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "biome check",
-    "format": "biome format --write",
+    "postinstall": "prisma generate",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "check": "pnpm typecheck && pnpm lint",
     "db:migrate": "prisma migrate deploy",
     "db:setup": "node scripts/db-setup.mjs",
     "db:all": "pnpm db:migrate && pnpm db:setup"

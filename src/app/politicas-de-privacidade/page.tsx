@@ -6,8 +6,9 @@ export default function PoliticaPrivacidade() {
       </h1>
 
       <p className="mb-4">
-        Esta Política de Privacidade descreve como coletamos, usamos e protegemos
-        suas informações ao utilizar nossa loja online de semi-jóias e produtos diversos.
+        Esta Política de Privacidade descreve como coletamos, usamos e
+        protegemos suas informações ao utilizar nossa loja online de semi-jóias
+        e produtos diversos.
       </p>
 
       <Section title="1. Coleta de Informações">
@@ -79,7 +80,8 @@ export default function PoliticaPrivacidade() {
 
       <Section title="9. Contato">
         <p>
-          Em caso de dúvidas ou solicitações relacionadas à privacidade, entre em contato:
+          Em caso de dúvidas ou solicitações relacionadas à privacidade, entre
+          em contato:
         </p>
         <p className="mt-2 font-medium">contato@sualoja.com</p>
       </Section>
@@ -87,7 +89,10 @@ export default function PoliticaPrivacidade() {
   );
 }
 
-function Section({ title, children }: {
+function Section({
+  title,
+  children,
+}: {
   title: string;
   children: React.ReactNode;
 }) {

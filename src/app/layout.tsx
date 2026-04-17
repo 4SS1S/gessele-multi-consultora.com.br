@@ -4,7 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,8 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Gessele Oliveira | Multi Consultora",
-  description:
-    "Links e contatos de Gessele Oliveira - Consultora Madrejoy",
+  description: "Links e contatos de Gessele Oliveira - Consultora Madrejoy",
 };
 
 export default function RootLayout({

@@ -1,51 +1,59 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import Link from 'next/link'
-import { useRef, useState } from 'react'
-import { useFormStatus } from 'react-dom'
+import Image from "next/image";
+import Link from "next/link";
+import { useRef, useState } from "react";
+import { useFormStatus } from "react-dom";
 
 interface ProductFormProps {
-  action: (formData: FormData) => void
-  error?: string | null
+  action: (formData: FormData) => void;
+  error?: string | null;
   defaultValues?: {
-    name?: string
-    description?: string
-    price?: number
-    quantity?: number
-    imageUrl?: string | null
-  }
+    name?: string;
+    description?: string;
+    price?: number;
+    quantity?: number;
+    imageUrl?: string | null;
+  };
 }
 
 function SubmitButton({ label }: { label: string }) {
-  const { pending } = useFormStatus()
+  const { pending } = useFormStatus();
   return (
     <button
       type="submit"
       disabled={pending}
       className="rounded-xl bg-violet-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-violet-500 disabled:opacity-60"
     >
-      {pending ? 'Salvando...' : label}
+      {pending ? "Salvando..." : label}
     </button>
-  )
+  );
 }
 
-export function ProductForm({ action, error, defaultValues }: ProductFormProps) {
-  const [preview, setPreview] = useState<string | null>(defaultValues?.imageUrl ?? null)
-  const fileRef = useRef<HTMLInputElement>(null)
+export function ProductForm({
+  action,
+  error,
+  defaultValues,
+}: ProductFormProps) {
+  const [preview, setPreview] = useState<string | null>(
+    defaultValues?.imageUrl ?? null,
+  );
+  const fileRef = useRef<HTMLInputElement>(null);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const url = URL.createObjectURL(file)
-    setPreview(url)
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    setPreview(url);
   }
 
   return (
     <form action={action} encType="multipart/form-data" className="space-y-6">
       {/* Imagem */}
       <div className="space-y-2">
-        <label className="block text-xs font-medium text-white/70">Foto do produto</label>
+        <label className="block text-xs font-medium text-white/70">
+          Foto do produto
+        </label>
 
         <div
           onClick={() => fileRef.current?.click()}
@@ -58,10 +66,12 @@ export function ProductForm({ action, error, defaultValues }: ProductFormProps) 
                 alt="Preview"
                 fill
                 className="object-cover"
-                unoptimized={preview.startsWith('blob:')}
+                unoptimized={preview.startsWith("blob:")}
               />
               <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition hover:opacity-100">
-                <span className="text-xs font-medium text-white">Clique para trocar</span>
+                <span className="text-xs font-medium text-white">
+                  Clique para trocar
+                </span>
               </div>
             </>
           ) : (
@@ -85,7 +95,10 @@ export function ProductForm({ action, error, defaultValues }: ProductFormProps) 
 
       {/* Nome */}
       <div className="space-y-1.5">
-        <label htmlFor="name" className="block text-xs font-medium text-white/70">
+        <label
+          htmlFor="name"
+          className="block text-xs font-medium text-white/70"
+        >
           Nome do produto <span className="text-red-400">*</span>
         </label>
         <input
@@ -101,14 +114,17 @@ export function ProductForm({ action, error, defaultValues }: ProductFormProps) 
 
       {/* Descrição */}
       <div className="space-y-1.5">
-        <label htmlFor="description" className="block text-xs font-medium text-white/70">
+        <label
+          htmlFor="description"
+          className="block text-xs font-medium text-white/70"
+        >
           Descrição
         </label>
         <textarea
           id="description"
           name="description"
           rows={3}
-          defaultValue={defaultValues?.description ?? ''}
+          defaultValue={defaultValues?.description ?? ""}
           placeholder="Descreva o produto, ingredientes, modo de uso..."
           className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/20 outline-none transition focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
         />
@@ -117,7 +133,10 @@ export function ProductForm({ action, error, defaultValues }: ProductFormProps) 
       {/* Preço e Quantidade */}
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <label htmlFor="price" className="block text-xs font-medium text-white/70">
+          <label
+            htmlFor="price"
+            className="block text-xs font-medium text-white/70"
+          >
             Preço (R$) <span className="text-red-400">*</span>
           </label>
           <input
@@ -134,7 +153,10 @@ export function ProductForm({ action, error, defaultValues }: ProductFormProps) 
         </div>
 
         <div className="space-y-1.5">
-          <label htmlFor="quantity" className="block text-xs font-medium text-white/70">
+          <label
+            htmlFor="quantity"
+            className="block text-xs font-medium text-white/70"
+          >
             Quantidade em estoque <span className="text-red-400">*</span>
           </label>
           <input
@@ -153,7 +175,9 @@ export function ProductForm({ action, error, defaultValues }: ProductFormProps) 
 
       {/* Erro */}
       {error && (
-        <p className="rounded-lg bg-red-500/10 px-3 py-2 text-xs text-red-400">{error}</p>
+        <p className="rounded-lg bg-red-500/10 px-3 py-2 text-xs text-red-400">
+          {error}
+        </p>
       )}
 
       {/* Botões */}
@@ -167,5 +191,5 @@ export function ProductForm({ action, error, defaultValues }: ProductFormProps) 
         </Link>
       </div>
     </form>
-  )
+  );
 }

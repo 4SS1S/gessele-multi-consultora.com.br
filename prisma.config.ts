@@ -1,9 +1,9 @@
-import path from 'node:path'
-import { defineConfig } from 'prisma/config'
+import path from "node:path";
+import { defineConfig } from "prisma/config";
 // import 'dotenv/config'
 
 export default defineConfig({
-  schema: path.join('prisma', 'schema.prisma'),
+  schema: path.join("prisma", "schema.prisma"),
 
   datasource: {
     // URL usada pelo CLI (migrate dev/deploy). Deve ser conexão direta (sem PgBouncer).
@@ -19,4 +19,4 @@ export default defineConfig({
   //     return new PrismaPg(pool)
   //   },
   // },
-})
+});

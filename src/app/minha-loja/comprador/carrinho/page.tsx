@@ -1,22 +1,22 @@
-import Image from 'next/image'
-import { redirect } from 'next/navigation'
-import { prisma } from '@/lib/prisma'
-import { createClient } from '@/lib/server'
-import { CartItemControls } from './components/cart-item-controls'
-import { CheckoutButton } from './components/checkout-button'
+import Image from "next/image";
+import { redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import { createClient } from "@/lib/server";
+import { CartItemControls } from "./components/cart-item-controls";
+import { CheckoutButton } from "./components/checkout-button";
 
 export default async function CarrinhoPage() {
-  const supabase = await createClient()
+  const supabase = await createClient();
   const {
     data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) redirect('/auth/login')
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/auth/login");
 
   const profile = await prisma.profile.findUnique({
     where: { id: user.id },
     select: { role: true },
-  })
-  if (profile?.role !== 'comprador') redirect('/minha-loja')
+  });
+  if (profile?.role !== "comprador") redirect("/minha-loja");
 
   const cart = await prisma.cart.findUnique({
     where: { compradorId: user.id },
@@ -24,26 +24,32 @@ export default async function CarrinhoPage() {
       items: {
         include: {
           product: {
-            select: { id: true, name: true, price: true, quantity: true, imageUrl: true },
+            select: {
+              id: true,
+              name: true,
+              price: true,
+              quantity: true,
+              imageUrl: true,
+            },
           },
         },
-        orderBy: { product: { name: 'asc' } },
+        orderBy: { product: { name: "asc" } },
       },
     },
-  })
+  });
 
-  const items = cart?.items ?? []
+  const items = cart?.items ?? [];
   const total = items.reduce(
     (acc, item) => acc + Number(item.product.price) * item.quantity,
-    0
-  )
+    0,
+  );
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-white">Carrinho</h1>
         <p className="mt-1 text-sm text-white/40">
-          {items.length} {items.length === 1 ? 'item' : 'itens'}
+          {items.length} {items.length === 1 ? "item" : "itens"}
         </p>
       </div>
 
@@ -87,20 +93,24 @@ export default async function CarrinhoPage() {
                 {/* Dados */}
                 <div className="flex flex-1 flex-col justify-between min-w-0">
                   <div className="flex items-start justify-between gap-2">
-                    <p className="font-medium text-white truncate">{item.product.name}</p>
+                    <p className="font-medium text-white truncate">
+                      {item.product.name}
+                    </p>
                     <p className="shrink-0 font-bold text-emerald-400">
-                      {(Number(item.product.price) * item.quantity).toLocaleString('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL',
+                      {(
+                        Number(item.product.price) * item.quantity
+                      ).toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
                       })}
                     </p>
                   </div>
                   <div className="flex items-center justify-between mt-2">
                     <p className="text-xs text-white/40">
-                      {Number(item.product.price).toLocaleString('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL',
-                      })}{' '}
+                      {Number(item.product.price).toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}{" "}
                       cada · {item.product.quantity} em estoque
                     </p>
                     <CartItemControls
@@ -120,14 +130,19 @@ export default async function CarrinhoPage() {
 
             <div className="space-y-2 text-sm">
               {items.map((item) => (
-                <div key={item.id} className="flex justify-between text-white/60">
+                <div
+                  key={item.id}
+                  className="flex justify-between text-white/60"
+                >
                   <span className="truncate mr-2">
                     {item.product.name} ×{item.quantity}
                   </span>
                   <span className="shrink-0">
-                    {(Number(item.product.price) * item.quantity).toLocaleString('pt-BR', {
-                      style: 'currency',
-                      currency: 'BRL',
+                    {(
+                      Number(item.product.price) * item.quantity
+                    ).toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
                     })}
                   </span>
                 </div>
@@ -137,7 +152,10 @@ export default async function CarrinhoPage() {
             <div className="border-t border-white/8 pt-4 flex justify-between">
               <span className="font-semibold text-white">Total</span>
               <span className="font-bold text-emerald-400 text-lg">
-                {total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                {total.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                })}
               </span>
             </div>
 
@@ -153,5 +171,5 @@ export default async function CarrinhoPage() {
         </div>
       )}
     </div>
-  )
+  );
 }

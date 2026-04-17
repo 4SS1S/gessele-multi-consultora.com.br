@@ -12,7 +12,13 @@
       "Bash(psql --version)",
       "Bash(node scripts/db-setup.mjs)",
       "Bash(pnpm dlx:*)",
-      "Bash(pnpm tsc:*)"
+      "Bash(pnpm tsc:*)",
+      "Bash(pnpm next:*)",
+      "Bash(chmod +x \"d:/Documents/gessele-multi-consultora.com.br/.git/hooks/pre-push\")",
+      "Bash(pnpm typecheck:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(grep -v \"^$\")",
+      "Bash(grep -E \"^src\\\\\\\\\")"
     ]
   }
 }

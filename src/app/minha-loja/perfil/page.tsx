@@ -1,16 +1,16 @@
-import { redirect } from 'next/navigation'
-import { prisma } from '@/lib/prisma'
-import { createClient } from '@/lib/server'
-import { ProfileForm } from './profile-form'
+import { redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import { createClient } from "@/lib/server";
+import { ProfileForm } from "./profile-form";
 
 export default async function PerfilPage() {
-  const supabase = await createClient()
+  const supabase = await createClient();
 
   const {
     data: { user },
-  } = await supabase.auth.getUser()
+  } = await supabase.auth.getUser();
 
-  if (!user) redirect('/auth/login')
+  if (!user) redirect("/auth/login");
 
   const profile = await prisma.profile.findUnique({
     where: { id: user.id },
@@ -23,9 +23,9 @@ export default async function PerfilPage() {
       role: true,
       createdAt: true,
     },
-  })
+  });
 
-  if (!profile) redirect('/auth/login')
+  if (!profile) redirect("/auth/login");
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
@@ -38,5 +38,5 @@ export default async function PerfilPage() {
 
       <ProfileForm profile={profile} />
     </div>
-  )
+  );
 }
