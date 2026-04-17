@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm add:*)",
+      "Bash(pnpm prisma:*)",
+      "Bash(pnpm approve-builds:*)",
+      "Bash(cat .npmrc)",
+      "Bash(cat pnpm-workspace.yaml)",
+      "Bash(pnpm install:*)",
+      "Bash(ls d:/Documents/gessele-multi-consultora.com.br/next.config*)",
+      "Bash(npx supabase:*)",
+      "Bash(psql --version)",
+      "Bash(node scripts/db-setup.mjs)",
+      "Bash(pnpm dlx:*)",
+      "Bash(pnpm tsc:*)"
+    ]
+  }
+}

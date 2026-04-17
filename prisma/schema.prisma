@@ -1,0 +1,135 @@
+// =============================================
+// Prisma Schema — Gessele Multi Consultora
+// =============================================
+// Banco: PostgreSQL (Supabase)
+// Auth:  Supabase Auth (tabela auth.users gerenciada pelo Supabase)
+// =============================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // Prisma 7: a URL de conexão é passada via prisma.config.ts (migrate)
+  // e via adapter no PrismaClient (runtime). Veja src/lib/prisma.ts e prisma.config.ts
+}
+
+// =============================================
+// Enums
+// =============================================
+
+enum Role {
+  administrador
+  consultora
+  comprador
+}
+
+enum OrderStatus {
+  pendente
+  confirmado
+  enviado
+  entregue
+  cancelado
+}
+
+// =============================================
+// Perfil do usuário (vinculado ao auth.users via trigger no Supabase)
+// =============================================
+model Profile {
+  id        String    @id @db.Uuid
+  fullName  String    @default("") @map("full_name")
+  email     String    @default("")
+  phone     String?
+  cpf       String?   @unique
+  avatarUrl String?   @map("avatar_url")
+  role      Role      @default(comprador)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  products  Product[]
+  cart      Cart?
+  orders    Order[]
+
+  @@map("profiles")
+}
+
+// =============================================
+// Produtos — gerenciados por cada consultora
+// =============================================
+model Product {
+  id           String      @id @default(cuid())
+  name         String
+  description  String?
+  price        Decimal     @db.Decimal(10, 2)
+  quantity     Int         @default(0)
+  imageUrl     String?     @map("image_url")
+  consultoraId String      @map("consultora_id") @db.Uuid
+  consultora   Profile     @relation(fields: [consultoraId], references: [id], onDelete: Cascade)
+  createdAt    DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  cartItems    CartItem[]
+  orderItems   OrderItem[]
+
+  @@map("products")
+}
+
+// =============================================
+// Carrinho — um por comprador (ativo)
+// =============================================
+model Cart {
+  id          String     @id @default(cuid())
+  compradorId String     @unique @map("comprador_id") @db.Uuid
+  comprador   Profile    @relation(fields: [compradorId], references: [id], onDelete: Cascade)
+  items       CartItem[]
+  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("carts")
+}
+
+model CartItem {
+  id        String  @id @default(cuid())
+  cartId    String  @map("cart_id")
+  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId String  @map("product_id")
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int     @default(1)
+
+  @@unique([cartId, productId])
+  @@map("cart_items")
+}
+
+// =============================================
+// Pedidos — histórico de compras
+// =============================================
+model Order {
+  id          String      @id @default(cuid())
+  compradorId String      @map("comprador_id") @db.Uuid
+  comprador   Profile     @relation(fields: [compradorId], references: [id], onDelete: Cascade)
+  status      OrderStatus @default(pendente)
+  total       Decimal     @db.Decimal(10, 2)
+  items       OrderItem[]
+  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id           String   @id @default(cuid())
+  orderId      String   @map("order_id")
+  order        Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  // Referência opcional ao produto original (pode ter sido deletado)
+  productId    String?  @map("product_id")
+  product      Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  // Snapshot dos dados do produto no momento da compra
+  productName  String   @map("product_name")
+  productPrice Decimal  @map("product_price") @db.Decimal(10, 2)
+  productImage String?  @map("product_image")
+  quantity     Int
+  subtotal     Decimal  @db.Decimal(10, 2)
+
+  @@map("order_items")
+}
