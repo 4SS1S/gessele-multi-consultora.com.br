@@ -18,7 +18,7 @@ export async function login(
 
   if (error) return { error: error.message };
 
-  redirect("/crm");
+  redirect("/minha-loja");
 }
 
 export async function register(
@@ -89,7 +89,7 @@ export async function register(
     },
   });
 
-  redirect("/crm");
+  redirect("/minha-loja");
 }
 
 export async function logout() {

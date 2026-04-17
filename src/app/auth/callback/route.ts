@@ -8,7 +8,7 @@ import { createClient } from '@/lib/server'
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/crm'
+  const next = searchParams.get('next') ?? '/minha-loja'
   const error = searchParams.get('error')
 
   if (error) {
