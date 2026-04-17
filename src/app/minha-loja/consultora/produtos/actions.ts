@@ -59,7 +59,8 @@ export async function createProduct(
   const imageFile = formData.get("image") as File | null;
 
   if (!name) return { error: "O nome do produto é obrigatório." };
-  if (Number.isNaN(price) || price < 0) return { error: "Informe um preço válido." };
+  if (Number.isNaN(price) || price < 0)
+    return { error: "Informe um preço válido." };
   if (Number.isNaN(quantity) || quantity < 0)
     return { error: "Informe uma quantidade válida." };
 
