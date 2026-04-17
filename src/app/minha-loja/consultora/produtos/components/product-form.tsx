@@ -51,12 +51,21 @@ export function ProductForm({
     <form action={action} encType="multipart/form-data" className="space-y-6">
       {/* Imagem */}
       <div className="space-y-2">
-        <label className="block text-xs font-medium text-white/70">
+        <label
+          htmlFor="image"
+          className="block text-xs font-medium text-white/70"
+        >
           Foto do produto
         </label>
 
-        <div
+        <button
+          type="button"
           onClick={() => fileRef.current?.click()}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              fileRef.current?.click();
+            }
+          }}
           className="relative flex h-52 w-full cursor-pointer items-center justify-center overflow-hidden rounded-2xl border border-dashed border-white/15 bg-white/4 transition hover:border-violet-500/50 hover:bg-white/6"
         >
           {preview ? (
@@ -81,9 +90,10 @@ export function ProductForm({
               <span className="text-[10px]">JPG, PNG ou WebP · máx. 5 MB</span>
             </div>
           )}
-        </div>
+        </button>
 
         <input
+          id="image"
           ref={fileRef}
           type="file"
           name="image"

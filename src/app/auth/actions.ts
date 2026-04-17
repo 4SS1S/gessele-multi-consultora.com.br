@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/complexity/useOptionalChain: <explanation> */
 "use server";
 
 import { redirect } from "next/navigation";

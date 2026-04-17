@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useActionState, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/correctness/noUnusedFunctionParameters: <explanation> */
 "use client";
 
 import { useState } from "react";

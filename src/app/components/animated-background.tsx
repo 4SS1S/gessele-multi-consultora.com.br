@@ -2,6 +2,7 @@
 
 const BOKEH_PARTICLES = [
   {
+    id: "bokeh-1",
     size: 180,
     x: 10,
     y: 15,
@@ -10,6 +11,7 @@ const BOKEH_PARTICLES = [
     color: "rgba(168, 51, 185, 0.18)",
   },
   {
+    id: "bokeh-2",
     size: 120,
     x: 75,
     y: 10,
@@ -18,6 +20,7 @@ const BOKEH_PARTICLES = [
     color: "rgba(232, 69, 144, 0.14)",
   },
   {
+    id: "bokeh-3",
     size: 90,
     x: 50,
     y: 60,
@@ -26,6 +29,7 @@ const BOKEH_PARTICLES = [
     color: "rgba(217, 54, 157, 0.16)",
   },
   {
+    id: "bokeh-4",
     size: 200,
     x: 85,
     y: 70,
@@ -34,6 +38,7 @@ const BOKEH_PARTICLES = [
     color: "rgba(139, 92, 246, 0.14)",
   },
   {
+    id: "bokeh-5",
     size: 70,
     x: 20,
     y: 80,
@@ -42,6 +47,7 @@ const BOKEH_PARTICLES = [
     color: "rgba(232, 69, 144, 0.15)",
   },
   {
+    id: "bokeh-6",
     size: 140,
     x: 60,
     y: 30,
@@ -50,6 +56,7 @@ const BOKEH_PARTICLES = [
     color: "rgba(168, 51, 185, 0.12)",
   },
   {
+    id: "bokeh-7",
     size: 60,
     x: 35,
     y: 90,
@@ -58,6 +65,7 @@ const BOKEH_PARTICLES = [
     color: "rgba(217, 54, 157, 0.14)",
   },
   {
+    id: "bokeh-8",
     size: 100,
     x: 90,
     y: 40,
@@ -74,9 +82,9 @@ export function AnimatedBackground() {
       <div className="gradient-flow" />
 
       {/* Bokeh particles */}
-      {BOKEH_PARTICLES.map((p, i) => (
+      {BOKEH_PARTICLES.map((p) => (
         <div
-          key={i}
+          key={p.id}
           className="bokeh-particle"
           style={{
             width: p.size,
