@@ -8,7 +8,8 @@ import pg from "pg";
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
 function createPrismaClient() {
-  const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+  // max: 1 é essencial em serverless (Vercel) para não esgotar conexões no pooler
+  const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL, max: 1 });
   const adapter = new PrismaPg(pool);
   return new PrismaClient({
     adapter,
