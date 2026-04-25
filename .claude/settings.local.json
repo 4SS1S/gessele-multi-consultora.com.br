@@ -18,7 +18,13 @@
       "Bash(pnpm typecheck:*)",
       "Bash(pnpm lint:*)",
       "Bash(grep -v \"^$\")",
-      "Bash(grep -E \"^src\\\\\\\\\")"
+      "Bash(grep -E \"^src\\\\\\\\\")",
+      "Bash(npx prisma *)",
+      "Bash(DIRECT_URL=\"postgresql://postgres:6u5ANC7PmdDtUtsf@db.jcmjgmolzabdtaowkhqd.supabase.co:5432/postgres\" npx prisma migrate dev --name add-active-to-profile)",
+      "Bash(DIRECT_URL=\"postgresql://postgres:6u5ANC7PmdDtUtsf@db.jcmjgmolzabdtaowkhqd.supabase.co:5432/postgres\" npx prisma migrate deploy)",
+      "Bash(npx tsc *)",
+      "Bash(xargs ls *)",
+      "Bash(node -e ' *)"
     ]
   }
 }

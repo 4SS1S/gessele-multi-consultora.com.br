@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { createManyNotifications } from "@/lib/notifications";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/server";
 
@@ -116,6 +117,7 @@ export async function checkout() {
               price: true,
               quantity: true,
               imageUrl: true,
+              consultoraId: true,
             },
           },
         },
@@ -175,6 +177,22 @@ export async function checkout() {
 
     return newOrder;
   });
+
+  // Notifica cada consultora cujos produtos estavam no pedido
+  const compradorProfile = await prisma.profile.findUnique({
+    where: { id: compradorId },
+    select: { fullName: true, email: true },
+  });
+  const compradorNome = compradorProfile?.fullName || compradorProfile?.email || "Um comprador";
+  const consultoraIds = [...new Set(cart.items.map((i) => i.product.consultoraId))];
+  await createManyNotifications(
+    consultoraIds.map((id) => ({
+      userId: id,
+      title: "Novo pedido recebido!",
+      body: `${compradorNome} fez um pedido com seus produtos.`,
+      href: `/minha-loja/consultora/pedidos`,
+    })),
+  );
 
   revalidatePath("/minha-loja/comprador/carrinho");
   revalidatePath("/minha-loja/comprador/pedidos");

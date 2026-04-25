@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { logout } from "@/app/auth/actions";
+import { NotificationBell } from "./notification-bell";
 
 type Role = "administrador" | "consultora" | "comprador";
 
@@ -16,7 +17,7 @@ const NAV: Record<Role, NavItem[]> = {
   administrador: [
     { label: "Dashboard", href: "/minha-loja/admin" },
     { label: "Usuários", href: "/minha-loja/admin/usuarios" },
-    { label: "Consultorias", href: "/minha-loja/admin/consultorias" },
+    { label: "Consultoras", href: "/minha-loja/admin/consultoras" },
     { label: "Compradores", href: "/minha-loja/admin/compradores" },
     { label: "Relatórios", href: "/minha-loja/admin/relatorios" },
   ],
@@ -47,14 +48,25 @@ const ROLE_COLOR: Record<Role, string> = {
   comprador: "bg-sky-500/15 text-sky-400",
 };
 
+type Notif = {
+  id: string;
+  title: string;
+  body: string;
+  href: string | null;
+  read: boolean;
+  createdAt: Date;
+};
+
 interface SidebarProps {
   role: Role;
   fullName: string;
   email: string;
   avatarUrl?: string | null;
+  unreadCount: number;
+  recentNotifications: Notif[];
 }
 
-export function Sidebar({ role, fullName, email, avatarUrl }: SidebarProps) {
+export function Sidebar({ role, fullName, email, avatarUrl, unreadCount, recentNotifications }: SidebarProps) {
   const pathname = usePathname();
   const items = NAV[role] ?? [];
   const initials = (fullName || "U").charAt(0).toUpperCase();
@@ -135,14 +147,20 @@ export function Sidebar({ role, fullName, email, avatarUrl }: SidebarProps) {
           >
             {ROLE_LABEL[role]}
           </span>
-          <form action={logout}>
-            <button
-              type="submit"
-              className="rounded-lg border border-white/8 px-3 py-1.5 text-xs text-white/40 transition hover:border-white/15 hover:text-white/70"
-            >
-              Sair
-            </button>
-          </form>
+          <div className="flex items-center gap-1">
+            <NotificationBell
+              unreadCount={unreadCount}
+              recent={recentNotifications}
+            />
+            <form action={logout}>
+              <button
+                type="submit"
+                className="rounded-lg border border-white/8 px-3 py-1.5 text-xs text-white/40 transition hover:border-white/15 hover:text-white/70"
+              >
+                Sair
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </aside>

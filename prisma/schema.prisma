@@ -44,12 +44,14 @@ model Profile {
   cpf       String?   @unique
   avatarUrl String?   @map("avatar_url")
   role      Role      @default(comprador)
+  active    Boolean   @default(true)
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  products  Product[]
-  cart      Cart?
-  orders    Order[]
+  products      Product[]
+  cart          Cart?
+  orders        Order[]
+  notifications Notification[]
 
   @@map("profiles")
 }
@@ -115,6 +117,22 @@ model Order {
   updatedAt   DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   @@map("orders")
+}
+
+// =============================================
+// Notificações
+// =============================================
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id") @db.Uuid
+  user      Profile  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  body      String
+  href      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("notifications")
 }
 
 model OrderItem {

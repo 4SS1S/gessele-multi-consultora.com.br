@@ -17,10 +17,19 @@ export default async function CrmLayout({
 
   if (!user) redirect("/auth/login");
 
-  const profile = await prisma.profile.findUnique({
-    where: { id: user.id },
-    select: { fullName: true, email: true, role: true, avatarUrl: true },
-  });
+  const [profile, recentNotifications, unreadCount] = await Promise.all([
+    prisma.profile.findUnique({
+      where: { id: user.id },
+      select: { fullName: true, email: true, role: true, avatarUrl: true },
+    }),
+    prisma.notification.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      select: { id: true, title: true, body: true, href: true, read: true, createdAt: true },
+    }),
+    prisma.notification.count({ where: { userId: user.id, read: false } }),
+  ]);
 
   if (!profile) redirect("/auth/login");
 
@@ -31,6 +40,8 @@ export default async function CrmLayout({
         fullName={profile.fullName}
         email={profile.email}
         avatarUrl={profile.avatarUrl}
+        unreadCount={unreadCount}
+        recentNotifications={recentNotifications}
       />
       <main className="flex-1 overflow-y-auto p-8">{children}</main>
     </div>

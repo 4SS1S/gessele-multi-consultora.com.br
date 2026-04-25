@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { createManyNotifications } from "@/lib/notifications";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/server";
 
@@ -133,6 +134,21 @@ export async function updateProduct(
     where: { id },
     data: { name, description, price, quantity, imageUrl },
   });
+
+  // Notifica compradores que têm este produto no carrinho
+  const cartItems = await prisma.cartItem.findMany({
+    where: { productId: id },
+    select: { cart: { select: { compradorId: true } } },
+  });
+  const compradorIds = [...new Set(cartItems.map((ci) => ci.cart.compradorId))];
+  await createManyNotifications(
+    compradorIds.map((userId) => ({
+      userId,
+      title: "Produto atualizado",
+      body: `O produto "${name}" no seu carrinho foi atualizado pela consultora.`,
+      href: "/minha-loja/comprador/carrinho",
+    })),
+  );
 
   revalidatePath("/minha-loja/consultora/produtos");
   redirect("/minha-loja/consultora/produtos");
