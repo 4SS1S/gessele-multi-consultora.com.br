@@ -4,17 +4,17 @@ import { prisma } from "@/lib/prisma";
 
 type Role = "administrador" | "consultora" | "comprador";
 
-type UserSummary = {
-  fullName: string;
-  email: string;
-  role: Role;
-  createdAt: Date;
-};
+// type UserSummary = {
+//   fullName: string;
+//   email: string;
+//   role: Role;
+//   createdAt: Date;
+// };
 
 export default async function UsuariosPage() {
   const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
   );
 
   const {
@@ -30,16 +30,16 @@ export default async function UsuariosPage() {
 
   if (profile?.role !== "administrador") redirect("/minha-loja");
 
-  const users = await prisma.profile.findMany({
-    orderBy: { createdAt: "desc" },
-    select: {
-      fullName: true,
-      email: true,
-      role: true,
-      createdAt: true,
-    },
-    take: 10,
-  });
+  // const users = await prisma.profile.findMany({
+  //   orderBy: { createdAt: "desc" },
+  //   select: {
+  //     fullName: true,
+  //     email: true,
+  //     role: true,
+  //     createdAt: true,
+  //   },
+  //   take: 10,
+  // });
 
   return (
     <div>

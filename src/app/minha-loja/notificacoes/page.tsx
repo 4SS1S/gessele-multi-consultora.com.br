@@ -49,7 +49,7 @@ export default async function NotificacoesPage() {
           </p>
         ) : (
           <ul>
-            {notifications.map((n, i) => (
+            {notifications.map((n) => (
               <li
                 key={n.id}
                 className={`border-b border-white/5 last:border-0 ${!n.read ? "bg-violet-500/5" : ""}`}
