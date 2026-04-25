@@ -183,8 +183,11 @@ export async function checkout() {
     where: { id: compradorId },
     select: { fullName: true, email: true },
   });
-  const compradorNome = compradorProfile?.fullName || compradorProfile?.email || "Um comprador";
-  const consultoraIds = [...new Set(cart.items.map((i) => i.product.consultoraId))];
+  const compradorNome =
+    compradorProfile?.fullName || compradorProfile?.email || "Um comprador";
+  const consultoraIds = [
+    ...new Set(cart.items.map((i) => i.product.consultoraId)),
+  ];
   await createManyNotifications(
     consultoraIds.map((id) => ({
       userId: id,

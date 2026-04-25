@@ -26,7 +26,14 @@ export default async function CrmLayout({
       where: { userId: user.id },
       orderBy: { createdAt: "desc" },
       take: 5,
-      select: { id: true, title: true, body: true, href: true, read: true, createdAt: true },
+      select: {
+        id: true,
+        title: true,
+        body: true,
+        href: true,
+        read: true,
+        createdAt: true,
+      },
     }),
     prisma.notification.count({ where: { userId: user.id, read: false } }),
   ]);

@@ -40,7 +40,9 @@ export default async function ConsultorasPage() {
           <h1 className="text-2xl font-bold text-white">Consultoras</h1>
           <p className="mt-1 text-sm text-white/40">
             {consultoras.length}{" "}
-            {consultoras.length === 1 ? "consultora cadastrada" : "consultoras cadastradas"}
+            {consultoras.length === 1
+              ? "consultora cadastrada"
+              : "consultoras cadastradas"}
           </p>
         </div>
         <Link

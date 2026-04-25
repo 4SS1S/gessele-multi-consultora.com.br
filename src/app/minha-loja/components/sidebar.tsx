@@ -66,7 +66,14 @@ interface SidebarProps {
   recentNotifications: Notif[];
 }
 
-export function Sidebar({ role, fullName, email, avatarUrl, unreadCount, recentNotifications }: SidebarProps) {
+export function Sidebar({
+  role,
+  fullName,
+  email,
+  avatarUrl,
+  unreadCount,
+  recentNotifications,
+}: SidebarProps) {
   const pathname = usePathname();
   const items = NAV[role] ?? [];
   const initials = (fullName || "U").charAt(0).toUpperCase();

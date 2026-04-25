@@ -10,7 +10,12 @@ export async function createNotification(data: {
 }
 
 export async function createManyNotifications(
-  notifications: { userId: string; title: string; body: string; href?: string }[],
+  notifications: {
+    userId: string;
+    title: string;
+    body: string;
+    href?: string;
+  }[],
 ) {
   if (notifications.length === 0) return;
   await prisma.notification.createMany({ data: notifications });

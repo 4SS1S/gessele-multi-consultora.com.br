@@ -37,7 +37,8 @@ export async function createConsultora(
   if (!email) return { error: "O e-mail é obrigatório." };
   if (!password) return { error: "A senha é obrigatória." };
   if (password !== confirm) return { error: "As senhas não coincidem." };
-  if (password.length < 6) return { error: "A senha deve ter pelo menos 6 caracteres." };
+  if (password.length < 6)
+    return { error: "A senha deve ter pelo menos 6 caracteres." };
 
   if (cpf) {
     if (!validateCPF(cpf)) return { error: "CPF inválido." };
